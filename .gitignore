@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build
+build/
+build_webpack/
+
+# Personal
+.todo
+scripts/testrpc_pid
+.idea/
+.DS_Store
+migrations/bkps/
+
+
+# Private stuff
+.env
+
+# Migrations output
+levels/levels-development.json
+levels/levels-development.json-bkp
+levels/levels-test.json
+levels/levels-test.json-bkp

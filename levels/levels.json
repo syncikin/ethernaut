@@ -1,0 +1,96 @@
+{
+  "ethernautDeployAddress": "populated-on-deployment",
+  "levels": [
+    {
+      "name": "Hello Ethernaut",
+      "difficulty": "0",
+      "descriptionFile": "instances.md",
+      "completedDescriptionFile": "instances_complete.md",
+      "factoryContractName": "InstanceFactory",
+      "instanceContractName": "Instance",
+      "revealInstanceContractCode": false,
+      "factoryContractDeployParams": [],
+      "insertCoin": 0,
+      "factoryContractDeployedAddress": "populated-on-deployment",
+      "instanceGas": 800000
+    },
+    {
+      "name": "Fallback",
+      "difficulty": "1",
+      "descriptionFile": "fallback.md",
+      "completedDescriptionFile": "fallback_complete.md",
+      "factoryContractName": "FallbackFactory",
+      "instanceContractName": "Fallback",
+      "revealInstanceContractCode": true,
+      "factoryContractDeployParams": [],
+      "insertCoin": 0,
+      "factoryContractDeployedAddress": "populated-on-deployment",
+      "instanceGas": 350000
+    },
+    {
+      "name": "Fallout",
+      "difficulty": "2",
+      "descriptionFile": "fallout.md",
+      "completedDescriptionFile": "fallout_complete.md",
+      "factoryContractName": "FalloutFactory",
+      "instanceContractName": "Fallout",
+      "revealInstanceContractCode": true,
+      "factoryContractDeployParams": [],
+      "insertCoin": 0,
+      "factoryContractDeployedAddress": "populated-on-deployment",
+      "instanceGas": 350000
+    },
+    {
+      "name": "Token",
+      "difficulty": "3",
+      "descriptionFile": "token.md",
+      "completedDescriptionFile": "token_complete.md",
+      "factoryContractName": "TokenFactory",
+      "instanceContractName": "Token",
+      "revealInstanceContractCode": true,
+      "factoryContractDeployParams": [],
+      "insertCoin": 0,
+      "factoryContractDeployedAddress": "populated-on-deployment",
+      "instanceGas": 300000
+    },
+    {
+      "name": "Delegation",
+      "difficulty": "4",
+      "descriptionFile": "delegate.md",
+      "completedDescriptionFile": "delegate_complete.md",
+      "factoryContractName": "DelegationFactory",
+      "instanceContractName": "Delegation",
+      "revealInstanceContractCode": true,
+      "factoryContractDeployParams": [],
+      "insertCoin": 0,
+      "factoryContractDeployedAddress": "populated-on-deployment",
+      "instanceGas": 250000
+    },
+    {
+      "name": "Force",
+      "difficulty": "5",
+      "descriptionFile": "force.md",
+      "completedDescriptionFile": "force_complete.md",
+      "factoryContractName": "ForceFactory",
+      "instanceContractName": "Force",
+      "revealInstanceContractCode": true,
+      "factoryContractDeployParams": [],
+      "insertCoin": 0,
+      "factoryContractDeployedAddress": "populated-on-deployment",
+      "instanceGas": 150000
+    },
+    {
+      "name": "Re-entrancy",
+      "difficulty": "6",
+      "descriptionFile": "reentrancy.md",
+      "completedDescriptionFile": "reentrancy_complete.md",
+      "factoryContractName": "ReentranceFactory",
+      "instanceContractName": "Reentrance",
+      "revealInstanceContractCode": true,
+      "factoryContractDeployParams": [],
+      "insertCoin": 1,
+      "factoryContractDeployedAddress": "populated-on-deployment",
+      "instanceGas": 250000
+    }
+  ]
+}
