@@ -11,8 +11,8 @@ contract PartnersFactory is Level {
     require(msg.value >= 1 ether);
 
     Partner partner1 = new Partner();
+    Partner partner2 = new Partner();
     partner1.transferOwnership(_player);
-    Partner partner2 = new Partner(); // No need to transfer ownership (owned by level)
     Partners instance = (new Partners).value(msg.value)(partner1, partner2);
 
     return instance;

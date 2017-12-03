@@ -21,8 +21,8 @@ const King = artifacts.require('./attacks/King.sol')
 const KingAttack = artifacts.require('./attacks/KingAttack.sol')
 const PartnersFactory = artifacts.require('./levels/PartnersFactory.sol')
 const Partners = artifacts.require('./attacks/Partners.sol')
+const Partner = artifacts.require('./attacks/Partner.sol')
 const PartnerAttack = artifacts.require('./attacks/PartnerAttack.sol')
-// const PartnersAttack = artifacts.require('./attacks/PartnersAttack.sol')
 import * as utils from './utils/TestUtils'
 import expectThrow from 'zeppelin-solidity/test/helpers/expectThrow'
 import toPromise from 'zeppelin-solidity/test/helpers/toPromise'
@@ -479,13 +479,17 @@ contract('Ethernaut', function(accounts) {
         ethernaut, level.address, player, Partners,
         {from: player, value: web3.toWei(1, 'ether')}
       )
-      console.log('instance:', instance)
+      // console.log('instance:', instance)
 
       // Init checks
+      console.log('player', player)
+      console.log('level', level.address)
+      console.log('ethernaut', ethernaut.address)
       let playerBalance = await utils.getBalance(web3, player)
-      console.log('bal', playerBalance)
-      // console.log(await instance.partner1())
-      // assert.equal(await instance.partner1(), player)
+      // console.log('bal', playerBalance)
+      let partner1 = await Partner.at(await instance.partner1())
+      console.log('partner1 owner', await partner1.owner())
+      assert.equal(await partner1.owner(), player)
       // assert.equal(await utils.getBalance(web3, instance.address), 1)
 
       // Player withdraws and:

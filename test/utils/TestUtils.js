@@ -34,9 +34,13 @@ export async function createLevelInstance(ethernaut, levelAddress, player, level
     const tx = await ethernaut.createLevelInstance(levelAddress, data);
     if(tx.logs.length === 0) reject()
     else {
-      const instanceAddress = tx.logs[0].args.instance;
-      const instance = await levelInstanceClass.at(instanceAddress);
-      resolve(instance);
+      tx.logs.map(async log => {
+        if(log.event === 'LevelInstanceCreatedLog') {
+          const instanceAddress = log.args.instance;
+          const instance = await levelInstanceClass.at(instanceAddress);
+          resolve(instance);
+        }
+      })
     }
   });
 }
