@@ -19,6 +19,10 @@ const Fallout = artifacts.require('./attacks/Fallout.sol')
 const KingFactory = artifacts.require('./levels/KingFactory.sol')
 const King = artifacts.require('./attacks/King.sol')
 const KingAttack = artifacts.require('./attacks/KingAttack.sol')
+const PartnersFactory = artifacts.require('./levels/PartnersFactory.sol')
+const Partners = artifacts.require('./attacks/Partners.sol')
+const PartnerAttack = artifacts.require('./attacks/PartnerAttack.sol')
+// const PartnersAttack = artifacts.require('./attacks/PartnersAttack.sol')
 import * as utils from './utils/TestUtils'
 import expectThrow from 'zeppelin-solidity/test/helpers/expectThrow'
 import toPromise from 'zeppelin-solidity/test/helpers/toPromise'
@@ -456,4 +460,78 @@ contract('Ethernaut', function(accounts) {
 
   });
 
+  // ----------------------------------
+  // Partners
+  // ----------------------------------
+
+  describe('Partners', function() {
+
+    let level
+
+    before(async function () {
+      level = await PartnersFactory.new()
+      await ethernaut.registerLevel(level.address)
+    })
+
+    it.only('should allow the player to solve the level', async function () {
+
+      let instance = await utils.createLevelInstance(
+        ethernaut, level.address, player, Partners,
+        {from: player, value: web3.toWei(1, 'ether')}
+      )
+      console.log('instance:', instance)
+
+      // Init checks
+      let playerBalance = await utils.getBalance(web3, player)
+      console.log('bal', playerBalance)
+      // console.log(await instance.partner1())
+      // assert.equal(await instance.partner1(), player)
+      // assert.equal(await utils.getBalance(web3, instance.address), 1)
+
+      // Player withdraws and:
+      // half is sent to the player,
+      // half is sent to the level.
+      // await instance.withdraw()
+      // let partner = await instance.partner2()
+      // assert.approximately(await utils.getBalance(web3, player), playerBalance + 0.5, 0.01)
+      // assert.approximately(await utils.getBalance(web3, partner), 0.5, 0.01)
+      // assert.equal(await utils.getBalance(web3, instance.address), 0)
+
+      // Factory check (should fail)
+      // console.log('Check complete (should fail)...')
+      // let completed = await utils.submitLevelInstance(
+      //   ethernaut,
+      //   level.address,
+      //   instance.address,
+      //   player
+      // )
+      // console.log('completed:', completed)
+      // assert.equal(completed, false)
+
+      // Setup a new instance, the previous one is already not winnable.
+      // instance = await utils.createLevelInstance(
+      //   ethernaut, level.address, player, Partners,
+      //   {from: player, value: web3.toWei(1, 'ether')}
+      // )
+      // assert.equal(await utils.getBalance(web3, instance.address), 1)
+
+      // Attack
+      // const attacker = await PartnerAttack.new()
+      // await attacker.attack(instance.address, 0)
+      // console.log('bal:', await utils.getBalance(web3, instance.address))
+
+      // Factory check (should pass)
+      // console.log('Check complete (should pass)...')
+      // completed = await utils.submitLevelInstance(
+      //   ethernaut,
+      //   level.address,
+      //   instance.address,
+      //   player
+      // )
+      // console.log('completed:', completed)
+      // assert.equal(completed, true)
+
+    });
+
+  });
 });
