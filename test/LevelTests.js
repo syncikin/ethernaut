@@ -22,7 +22,7 @@ const KingAttack = artifacts.require('./attacks/KingAttack.sol')
 const PartnersFactory = artifacts.require('./levels/PartnersFactory.sol')
 const Partners = artifacts.require('./attacks/Partners.sol')
 const Partner = artifacts.require('./attacks/Partner.sol')
-const PartnerAttack = artifacts.require('./attacks/PartnerAttack.sol')
+const ShadyPartner = artifacts.require('./attacks/ShadyPartner.sol')
 import * as utils from './utils/TestUtils'
 import expectThrow from 'zeppelin-solidity/test/helpers/expectThrow'
 import toPromise from 'zeppelin-solidity/test/helpers/toPromise'
@@ -482,50 +482,61 @@ contract('Ethernaut', function(accounts) {
       // console.log('instance:', instance)
 
       // Init checks
-      console.log('player', player)
-      console.log('level', level.address)
-      console.log('ethernaut', ethernaut.address)
-      let playerBalance = await utils.getBalance(web3, player)
+      // console.log('player', player)
+      // console.log('level', level.address)
+      // console.log('ethernaut', ethernaut.address)
       // console.log('bal', playerBalance)
+      // console.log('partner1 owner', await partner1.owner())
+      let playerBalance = await utils.getBalance(web3, player)
+      assert.equal(await utils.getBalance(web3, instance.address), 1)
+
+      // Identify partner contracts and their owners.
       let partner1 = await Partner.at(await instance.partner1())
-      console.log('partner1 owner', await partner1.owner())
+      let partner2 = await Partner.at(await instance.partner2())
       assert.equal(await partner1.owner(), player)
-      // assert.equal(await utils.getBalance(web3, instance.address), 1)
+      assert.equal(await partner2.owner(), level.address)
 
       // Player withdraws and:
-      // half is sent to the player,
-      // half is sent to the level.
-      // await instance.withdraw()
-      // let partner = await instance.partner2()
-      // assert.approximately(await utils.getBalance(web3, player), playerBalance + 0.5, 0.01)
-      // assert.approximately(await utils.getBalance(web3, partner), 0.5, 0.01)
-      // assert.equal(await utils.getBalance(web3, instance.address), 0)
+      // half is sent to the player's partner contract,
+      // half is sent to the level's partner contract.
+      await instance.withdraw()
+      assert.approximately(await utils.getBalance(web3, partner1.address), 0.5, 0.01)
+      assert.approximately(await utils.getBalance(web3, partner2.address), 0.5, 0.01)
+      assert.equal(await utils.getBalance(web3, instance.address), 0)
 
-      // Factory check (should fail)
-      // console.log('Check complete (should fail)...')
-      // let completed = await utils.submitLevelInstance(
-      //   ethernaut,
-      //   level.address,
-      //   instance.address,
-      //   player
-      // )
-      // console.log('completed:', completed)
-      // assert.equal(completed, false)
+      // Factory check (should fail because partner 2's funds are not zero)
+      console.log('Check completed (should fail)...')
+      let completed = await utils.submitLevelInstance(
+        ethernaut,
+        level.address,
+        instance.address,
+        player
+      )
+      console.log('completed:', completed)
+      assert.equal(completed, false)
 
       // Setup a new instance, the previous one is already not winnable.
-      // instance = await utils.createLevelInstance(
-      //   ethernaut, level.address, player, Partners,
-      //   {from: player, value: web3.toWei(1, 'ether')}
-      // )
-      // assert.equal(await utils.getBalance(web3, instance.address), 1)
+      instance = await utils.createLevelInstance(
+        ethernaut, level.address, player, Partners,
+        {from: player, value: web3.toWei(1, 'ether')}
+      )
+      assert.equal(await utils.getBalance(web3, instance.address), 1)
 
-      // Attack
-      // const attacker = await PartnerAttack.new()
-      // await attacker.attack(instance.address, 0)
-      // console.log('bal:', await utils.getBalance(web3, instance.address))
+      // Attack part 1: replace partner 1 (type Partner) with the attacker contract (type ShadyPartner)
+      const attacker = await ShadyPartner.new()
+      await instance.updatePartnership(attacker.address)
+
+      // Attack part 2: withdraw once avoiding partner to withdraw its part
+      await instance.withdraw() // A withdraw with the attacker will send to partner 1 but not partner 2
+      console.log('instance balance:', await utils.getBalance(web3, instance.address))
+      assert.notEqual(await utils.getBalance(web3, instance.address), 0)
+
+      // Attack part 3: remove as much as possible from the balance by one half at a time
+      // TODO
+      // await instance.withdraw() // Extract the rest of the funds by halves
 
       // Factory check (should pass)
-      // console.log('Check complete (should pass)...')
+      // console.log('Check completed (should pass)...')
       // completed = await utils.submitLevelInstance(
       //   ethernaut,
       //   level.address,

@@ -21,8 +21,8 @@ contract Partners {
   }
 
   function updatePartnership(Partner _newPartner) {
-    if(msg.sender == address(partner1)) partner1 = _newPartner;
-    else if(msg.sender == address(partner2)) partner2 = _newPartner;
+    if(msg.sender == partner1.owner()) partner1 = _newPartner;
+    else if(msg.sender == partner2.owner()) partner2 = _newPartner;
   }
 
   modifier nonReentrant() {
