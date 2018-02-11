@@ -103,6 +103,25 @@
         "instanceGas": 300000
       },
       {
+        "name": "Lottery",
+        "created": "2018-02-11",
+        "difficulty": "3",
+        "description": "lottery.md",
+        "completedDescription": "lottery_complete.md",
+        "levelContract": "LotteryFactory.sol",
+        "instanceContract": "Lottery.sol",
+        "revealCode": true,
+        "deployParams": [],
+        "deployFunds": 0,
+        "deployed_development": [
+          "x"
+        ],
+        "deployed_ropsten": [
+          "x"
+        ],
+        "instanceGas": 300000
+      },
+      {
         "name": "Delegation",
         "created": "2017-11-01",
         "difficulty": "4",
