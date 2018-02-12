@@ -6,25 +6,41 @@ contract Lottery is Ownable {
 
    struct Entry {
     address addr;
-    uint256 contribution;
-    uint256 guess;
+    uint256 number;
   }
 
   Entry[] entries;
+  uint8 public numParticipants;
+  uint8 public winCount;
 
   function Lottery() payable {
     owner = msg.sender;
+    numParticipants = 0;
   }
 
-  function bet(uint256 _guess) payable {
-    entries.push(Entry(msg.sender, msg.value, _guess));
+  function purchaseTicket(uint256 _guess) payable {
+    if (msg.value == 0.01 ether && numParticipants < 10) {
+      entries.push(Entry(msg.sender, _guess));
+      numParticipants++;
+    }
   }
 
-  function spin(uint256 _answer) public onlyOwner {
-    for (uint index = 0; index < entries.length; index++) {
-      if (entries[index].guess == _answer) {
+  function jackpot(uint256 _winningNumber) public onlyOwner returns (bool) {
+    // Check for winner
+    for (uint8 index = 0; index < numParticipants; index++) {
+      if (entries[index].number == _winningNumber) {
+        // Winner found!
         entries[index].addr.transfer(this.balance);
+        winCount++;
+        return true;
       }
     }
+
+    // No winner, reset 
+    for (index = 0; index < numParticipants; index++) {
+      entries[index].addr = address(0);
+      entries[index].number = 0;
+    }
+    return false;
   }
 }

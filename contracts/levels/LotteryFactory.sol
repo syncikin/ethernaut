@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
 import './base/Level.sol';
-import './LotteryFactory.sol';
+import './Lottery.sol';
 
 contract LotteryFactory {
 
@@ -13,6 +13,7 @@ contract LotteryFactory {
   function validateInstance(address _instance, address _player) public constant returns (bool) {
     _player;
     Lottery instance = Lottery(_instance);
-    return instance.spin();
+    //TODO: RNG
+    return instance.jackpot(125);
   }
 }
