@@ -13,6 +13,6 @@ contract LotteryFactory {
   function validateInstance(address _instance, address _player) public constant returns (bool) {
     _player;
     Lottery instance = Lottery(_instance);
-    return !instance.spin();
+    return instance.spin();
   }
 }

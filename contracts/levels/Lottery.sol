@@ -12,7 +12,6 @@ contract Lottery is Ownable {
 
   Entry[] entries;
 
-  /* constructor */
   function Lottery() payable {
     owner = msg.sender;
   }
@@ -22,9 +21,9 @@ contract Lottery is Ownable {
   }
 
   function spin(uint256 _answer) public onlyOwner {
-    for (uint index; index = 0; index < entries.length) {
+    for (uint index = 0; index < entries.length; index++) {
       if (entries[index].guess == _answer) {
-        entries[index].addr.send(this.balance);
+        entries[index].addr.transfer(this.balance);
       }
     }
   }
